@@ -158,15 +158,10 @@ if (!cli.flags.dryRun) {
 	await writeFile('./CHANGELOG.md', HEADER + md + '\n\n' + oldContent)
 
 	// update the package.json
-	if (existsSync('.yarn')) {
-		// yarn 3 needs a different command
-		await execPromise('yarn version ' + nextVersion)
-	} else {
-		await execPromise('yarn version --no-git-tag-version --new-version ' + nextVersion)
-	}
+	await execPromise('npm version ' + nextVersion + ' --git-tag-version false')
 
 	// git commit
-	await execPromise(`git add package.json yarn.lock CHANGELOG.md`)
+	await execPromise(`git add package.json package-lock.json CHANGELOG.md`)
 
 	await execPromise(`git commit -m "chore(release): v${nextVersion}"`)
 
